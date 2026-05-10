@@ -1,0 +1,67 @@
+# ========================================
+# Секреты и чувствительные данные
+# ========================================
+.env
+*.pem
+*.key
+*.crt
+
+# ========================================
+# Python / виртуальное окружение и тесты
+# ========================================
+venv/
+.venv/
+env/
+__pycache__/
+*.pyc
+*.pyo
+.pytest_cache/
+.coverage
+.mypy_cache/
+.tox/
+.python-version
+
+# ========================================
+# Django / Backend
+# ========================================
+backend/staticfiles/
+backend/media/
+backend/logs/
+backend/db.sqlite3
+backend/*.sqlite3
+
+# Миграции 
+# backend/*/migrations/0*.py
+# backend/*/migrations/__pycache__/
+
+# ========================================
+# React / Frontend
+# ========================================
+frontend/node_modules/
+frontend/dist/
+frontend/build/
+frontend/.vite/
+frontend/.env.local
+frontend/.env.production
+
+# Логи фронтенда
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# ========================================
+# Несколько env‑файлов (закрываем всё, кроме .env.example)
+# ========================================
+.env*
+!.env.example
+
+# ========================================
+# Редакторы, ОС и временные файлы
+# ========================================
+.vscode/
+.idea/
+.DS_Store
+*.swp
+*~
+*.log
+*.pid

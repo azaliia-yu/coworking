@@ -1,0 +1,75 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: coworking
+      POSTGRES_USER: coworking_user
+      POSTGRES_PASSWORD: coworking_password
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5433:5432"   # внешний порт 5433, чтобы не мешать локальному PostgreSQL
+
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6380:6379"   # внешний порт 6380
+
+  backend:
+    build: ./backend
+    command: python manage.py runserver 0.0.0.0:8000
+    environment:
+      - DEBUG=True
+      - SECRET_KEY=IYgUYGysdgcuG7873gdgG782FVGN
+      - DATABASE_URL=postgresql://coworking_user:coworking_password@db:5432/coworking
+      - REDIS_URL=redis://redis:6379/0
+      - CELERY_BROKER_URL=redis://redis:6379/0
+      - CELERY_RESULT_BACKEND=redis://redis:6379/0
+      - EMAIL_BACKEND=django.core.mail.backends.console.EmailBackend
+      - FRONTEND_URL=http://localhost:3000
+    depends_on:
+      - db
+      - redis
+    volumes:
+      - ./backend:/app
+      - media_data:/app/media
+    ports:
+      - "8000:8000"
+
+  celery_worker:
+    build: ./backend
+    command: celery -A config worker -l info
+    environment:
+      - DATABASE_URL=postgresql://coworking_user:coworking_password@db:5432/coworking
+      - REDIS_URL=redis://redis:6379/0
+      - CELERY_BROKER_URL=redis://redis:6379/0
+    depends_on:
+      - redis
+      - db
+
+  celery_beat:
+    build: ./backend
+    command: celery -A config beat -l info
+    environment:
+      - DATABASE_URL=postgresql://coworking_user:coworking_password@db:5432/coworking
+      - REDIS_URL=redis://redis:6379/0
+      - CELERY_BROKER_URL=redis://redis:6379/0
+    depends_on:
+      - redis
+      - db
+
+  frontend:
+    build: ./frontend
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    ports:
+      - "3000:3000"
+    depends_on:
+      - backend
+
+volumes:
+  postgres_data:
+  media_data:

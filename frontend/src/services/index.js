@@ -1,0 +1,7 @@
+export { default as api } from './api'
+export { default as spaceService } from './spaceService'
+export { default as bookingService } from './bookingService'
+export { default as tariffService } from './tariffService'
+export { default as paymentService } from './paymentService'
+export { default as userService } from './userService'
+export { default as reportService } from './reportService'

@@ -1,0 +1,6 @@
+export { default as AdminDashboard } from './Dashboard'
+export { default as AdminSpaces } from './Spaces'
+export { default as AdminTariffs } from './Tariffs'
+export { default as AdminUsers } from './Users'
+export { default as AdminReports } from './Reports'
+export { default as AdminSettings } from './Settings' 
