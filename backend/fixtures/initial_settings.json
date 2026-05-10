@@ -1,0 +1,88 @@
+[
+  {
+    "model": "settings.bookingsettings",
+    "pk": 1,
+    "fields": {
+      "min_booking_duration": 30,
+      "max_booking_duration": 1440,
+      "booking_interval": 15,
+      "advance_booking_days": 30,
+      "cancellation_deadline_minutes": 120,
+      "allow_simultaneous_bookings": false,
+      "max_simultaneous_bookings": 1,
+      "auto_cancel_unpaid_minutes": 30,
+      "enable_notifications": true,
+      "reminder_minutes_before": 60
+    }
+  },
+  {
+    "model": "settings.workinghours",
+    "pk": 1,
+    "fields": {
+      "day": 0,
+      "start_time": "09:00:00",
+      "end_time": "22:00:00",
+      "is_working": true
+    }
+  },
+  {
+    "model": "settings.workinghours",
+    "pk": 2,
+    "fields": {
+      "day": 1,
+      "start_time": "09:00:00",
+      "end_time": "22:00:00",
+      "is_working": true
+    }
+  },
+  {
+    "model": "settings.workinghours",
+    "pk": 3,
+    "fields": {
+      "day": 2,
+      "start_time": "09:00:00",
+      "end_time": "22:00:00",
+      "is_working": true
+    }
+  },
+  {
+    "model": "settings.workinghours",
+    "pk": 4,
+    "fields": {
+      "day": 3,
+      "start_time": "09:00:00",
+      "end_time": "22:00:00",
+      "is_working": true
+    }
+  },
+  {
+    "model": "settings.workinghours",
+    "pk": 5,
+    "fields": {
+      "day": 4,
+      "start_time": "09:00:00",
+      "end_time": "22:00:00",
+      "is_working": true
+    }
+  },
+  {
+    "model": "settings.workinghours",
+    "pk": 6,
+    "fields": {
+      "day": 5,
+      "start_time": "10:00:00",
+      "end_time": "20:00:00",
+      "is_working": true
+    }
+  },
+  {
+    "model": "settings.workinghours",
+    "pk": 7,
+    "fields": {
+      "day": 6,
+      "start_time": "10:00:00",
+      "end_time": "18:00:00",
+      "is_working": true
+    }
+  }
+]

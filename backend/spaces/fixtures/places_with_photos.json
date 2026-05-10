@@ -1,0 +1,46 @@
+[
+  {
+    "model": "spaces.place",
+    "pk": 1,
+    "fields": {
+      "space": 1,
+      "name": "Рабочее место у окна",
+      "place_type": "desk",
+      "capacity": 1,
+      "x": 50,
+      "y": 50,
+      "is_active": true,
+      "base_tariff": null,
+      "characteristics": {
+        "has_power": true,
+        "has_wifi": true,
+        "has_air_conditioning": true
+      },
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "spaces.place",
+    "pk": 2,
+    "fields": {
+      "space": 1,
+      "name": "Переговорная «Атмосфера»",
+      "place_type": "meeting_room",
+      "capacity": 8,
+      "x": 300,
+      "y": 100,
+      "is_active": true,
+      "base_tariff": null,
+      "characteristics": {
+        "has_power": true,
+        "has_wifi": true,
+        "has_projector": true,
+        "has_whiteboard": true,
+        "has_air_conditioning": true
+      },
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  }
+]
