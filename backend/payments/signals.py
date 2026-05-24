@@ -4,8 +4,6 @@ from .models import Payment
 
 @receiver(post_save, sender=Payment)
 def payment_post_save(sender, instance, created, **kwargs):
-    if created and instance.payment_method == 'balance':
-        # Логика для оплаты с баланса
-        if instance.booking:
-            instance.booking.status = 'confirmed'
-            instance.booking.save()
+    # Никакого автоматического изменения статуса бронирования здесь быть не должно.
+    # Статус меняется только в services.py (process_balance_payment / process_successful_payment)
+    pass

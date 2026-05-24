@@ -106,60 +106,52 @@ class DashboardStatsView(APIView):
 
 
 class RevenueStatsView(APIView):
-    """Получение статистики по выручке для дашборда"""
     permission_classes = [permissions.IsAuthenticated, IsAdmin]
 
     def get(self, request):
-        today = timezone.now().date()
-        today_start = datetime.combine(today, datetime.min.time())
-        today_end = datetime.combine(today, datetime.max.time())
+        start_str = request.query_params.get('start')
+        end_str = request.query_params.get('end')
 
-        week_start = today - timedelta(days=7)
-        month_start = today - timedelta(days=30)
+        if start_str and end_str:
+            try:
+                start_date = datetime.strptime(start_str, '%Y-%m-%d').date()
+                end_date = datetime.strptime(end_str, '%Y-%m-%d').date()
+            except ValueError:
+                return Response({'error': 'Неверный формат даты'}, status=400)
+        else:
+            today = timezone.now().date()
+            start_date = today - timedelta(days=7)
+            end_date = today
 
-        # Выручка за сегодня
-        today_revenue = Booking.objects.filter(
-            start_time__date=today,
-            status__in=['confirmed', 'completed']
-        ).aggregate(total=Sum('total_cost'))['total'] or 0
-
-        # Выручка за неделю
-        week_revenue = Booking.objects.filter(
-            start_time__date__gte=week_start,
-            status__in=['confirmed', 'completed']
-        ).aggregate(total=Sum('total_cost'))['total'] or 0
-
-        # Выручка за месяц
-        month_revenue = Booking.objects.filter(
-            start_time__date__gte=month_start,
-            status__in=['confirmed', 'completed']
-        ).aggregate(total=Sum('total_cost'))['total'] or 0
-
-        # Средний чек за месяц
-        month_bookings = Booking.objects.filter(
-            start_time__date__gte=month_start,
+        # Выручка за выбранный период
+        period_bookings = Booking.objects.filter(
+            start_time__date__gte=start_date,
+            start_time__date__lte=end_date,
             status__in=['confirmed', 'completed']
         )
-        bookings_count = month_bookings.count()
-        avg_check = month_revenue / bookings_count if bookings_count > 0 else 0
+        period_revenue = period_bookings.aggregate(total=Sum('total_cost'))['total'] or 0
+        bookings_count = period_bookings.count()
+        avg_check = period_revenue / bookings_count if bookings_count > 0 else 0
 
-        # Данные для графика (последние 7 дней)
+        # Данные для графика – каждый день в диапазоне
         chart_data = []
-        for i in range(6, -1, -1):
-            date = today - timedelta(days=i)
+        current_date = start_date
+        while current_date <= end_date:
             day_revenue = Booking.objects.filter(
-                start_time__date=date,
+                start_time__date=current_date,
                 status__in=['confirmed', 'completed']
             ).aggregate(total=Sum('total_cost'))['total'] or 0
             chart_data.append({
-                'date': date.strftime('%d.%m'),
+                'date': current_date.strftime('%d.%m'),
                 'revenue': float(day_revenue)
             })
+            current_date += timedelta(days=1)
 
+        # Дополнительно: сегодня/неделя/месяц можно убрать или пересчитать
         data = {
-            'today_revenue': float(today_revenue),
-            'week_revenue': float(week_revenue),
-            'month_revenue': float(month_revenue),
+            'today_revenue': 0,   # можно оставить как 0, если не нужно
+            'week_revenue': float(period_revenue),   # показываем за выбранный период
+            'month_revenue': float(period_revenue),
             'avg_check': float(avg_check),
             'chart_data': chart_data
         }
@@ -167,35 +159,41 @@ class RevenueStatsView(APIView):
         serializer = RevenueStatsSerializer(data)
         return Response(serializer.data)
 
-
 class OccupancyChartView(APIView):
-    """Получение данных о загрузке для графика"""
     permission_classes = [permissions.IsAuthenticated, IsAdmin]
 
     def get(self, request):
-        today = timezone.now().date()
+        start_str = request.query_params.get('start')
+        end_str = request.query_params.get('end')
+
+        if start_str and end_str:
+            try:
+                start_date = datetime.strptime(start_str, '%Y-%m-%d').date()
+                end_date = datetime.strptime(end_str, '%Y-%m-%d').date()
+            except ValueError:
+                return Response({'error': 'Неверный формат даты'}, status=400)
+        else:
+            today = timezone.now().date()
+            start_date = today - timedelta(days=7)
+            end_date = today
+
+        total_places = Place.objects.filter(is_active=True).count()
         chart_data = []
 
-        for i in range(6, -1, -1):
-            date = today - timedelta(days=i)
-            day_start = datetime.combine(date, datetime.min.time())
-            day_end = datetime.combine(date, datetime.max.time())
-
-            # Бронирования за этот день
+        current_date = start_date
+        while current_date <= end_date:
             day_bookings = Booking.objects.filter(
-                start_time__date=date,
-                status='confirmed'
+                start_time__date=current_date,
+                status__in=['confirmed', 'completed']
             ).count()
-
-            # Всего мест
-            total_places = Place.objects.filter(is_active=True).count()
 
             occupancy = (day_bookings / total_places * 100) if total_places > 0 else 0
 
             chart_data.append({
-                'date': date.strftime('%d.%m'),
+                'date': current_date.strftime('%d.%m'),
                 'occupancy': round(occupancy, 1),
                 'bookings': day_bookings
             })
+            current_date += timedelta(days=1)
 
         return Response({'chart_data': chart_data})

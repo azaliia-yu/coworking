@@ -22,7 +22,7 @@ services:
     command: python manage.py runserver 0.0.0.0:8000
     environment:
       - DEBUG=True
-      - SECRET_KEY=IYgUYGysdgcuG7873gdgG782FVGN
+      - SECRET_KEY=IYgUYGf7ysdgcuG7873gdgG782FVGN563
       - DATABASE_URL=postgresql://coworking_user:coworking_password@db:5432/coworking
       - REDIS_URL=redis://redis:6379/0
       - CELERY_BROKER_URL=redis://redis:6379/0

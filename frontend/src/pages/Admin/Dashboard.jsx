@@ -20,13 +20,18 @@ const AdminDashboard = () => {
     start: new Date(new Date().setDate(1)).toISOString().split('T')[0],
     end: new Date().toISOString().split('T')[0],
   });
-
+  
   useEffect(() => {
-    fetchDashboardData();
-    fetchRevenueData();
-    fetchOccupancyChart();
+    const load = () => {
+      fetchDashboardData();
+      fetchRevenueData();
+      fetchOccupancyChart();
+    };
+    load();
+    const interval = setInterval(load, 20000); // каждые 20 секунд
+    return () => clearInterval(interval);
   }, [selectedSpace, dateRange]);
-
+  
   const fetchDashboardData = async () => {
     try {
       const response = await api.get('/dashboard/stats/');
@@ -36,9 +41,15 @@ const AdminDashboard = () => {
     }
   };
 
+
   const fetchRevenueData = async () => {
     try {
-      const response = await api.get('/dashboard/revenue/');
+      const response = await api.get('/dashboard/revenue/', {
+        params: {
+          start: dateRange.start,
+          end: dateRange.end,
+        },
+      });
       setRevenueStats(response.data);
     } catch (error) {
       console.error('Failed to fetch revenue stats', error);
@@ -47,7 +58,12 @@ const AdminDashboard = () => {
 
   const fetchOccupancyChart = async () => {
     try {
-      const response = await api.get('/dashboard/occupancy-chart/');
+      const response = await api.get('/dashboard/occupancy-chart/', {
+        params: {
+          start: dateRange.start,
+          end: dateRange.end,
+        },
+      });
       setOccupancyChart(response.data.chart_data);
     } finally {
       setLoading(false);
@@ -227,7 +243,7 @@ const AdminDashboard = () => {
       {/* График загрузки */}
       {occupancyChart.length > 0 && (
         <Card>
-          <h2 className="text-lg font-semibold mb-4 text-gray-800">Загрузка помещений (последние 7 дней)</h2>
+          <h2 className="text-lg font-semibold mb-4 text-gray-800">Загрузка помещений</h2>
           <ResponsiveContainer width="100%" height={300}>
             <BarChart data={occupancyChart}>
               <CartesianGrid strokeDasharray="3 3" />
