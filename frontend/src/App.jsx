@@ -20,7 +20,9 @@ const AdminTariffs = lazy(() => import('./pages/Admin/Tariffs'))
 const AdminUsers = lazy(() => import('./pages/Admin/Users'))
 const AdminReports = lazy(() => import('./pages/Admin/Reports'))
 const AdminSettings = lazy(() => import('./pages/Admin/Settings'))
+const AccessEmulatorPage = lazy(() => import('./pages/Admin/AccessEmulatorPage')) 
 const NotFoundPage = lazy(() => import('./pages/NotFound/NotFoundPage'))
+const AdminAccessCardsPage = lazy(() => import('./pages/Admin/AdminAccessCardsPage'));
 
 function App() {
   const dispatch = useDispatch()
@@ -100,6 +102,8 @@ function App() {
             <Route path="users" element={<AdminUsers />} />
             <Route path="reports" element={<AdminReports />} />
             <Route path="settings" element={<AdminSettings />} />
+            <Route path="access-emulator" element={<AccessEmulatorPage />} /> 
+            <Route path="access-cards" element={<AdminAccessCardsPage />} />
           </Route>
 
           {/* 404 */}

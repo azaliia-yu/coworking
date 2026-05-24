@@ -6,6 +6,7 @@ import { updateProfile, fetchProfile } from '../../store/slices/authSlice'
 import { fetchBookings, cancelBooking } from '../../store/slices/bookingSlice'
 import { Button, Input, Loader, Badge, ConfirmDialog, Modal } from '../../components/common'
 import { formatDateTime, formatDate, calculateDuration } from '../../utils/dateUtils'
+import MyAccessCard from '../../components/client/MyAccessCard';
 import { toast } from 'react-hot-toast'
 import { useLocation } from 'react-router-dom'
 import api from '../../services/api'
@@ -165,6 +166,10 @@ const ProfilePage = () => {
                       </Button>
                     </dd>
                   </div>
+                  {/* Блок пропуска */}
+                  <div className="mt-6">
+                    <MyAccessCard />
+                    </div>
                   <div>
                     <dt className="text-sm font-medium text-gray-500">Роль</dt>
                     <dd className="mt-1 text-gray-800">

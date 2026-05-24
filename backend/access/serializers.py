@@ -10,6 +10,9 @@ class AccessCardSerializer(serializers.ModelSerializer):
         model = AccessCard
         fields = ('id', 'user', 'user_email', 'user_name', 'card_number', 'pin_code',
                   'is_active', 'issued_at', 'expires_at', 'last_used_at')
+        extra_kwargs = {
+            'card_number': {'required': False}   
+        }
 
 
 class AccessLogSerializer(serializers.ModelSerializer):
