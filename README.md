@@ -14,7 +14,6 @@
 **Frontend:**
 * React (JavaScript/TypeScript)
 * Recharts (построение графиков и дашбордов)
-* [Укажи UI-библиотеку, если есть: Tailwind / Material UI / Bootstrap]
 
 ---
 
